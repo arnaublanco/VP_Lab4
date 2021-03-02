@@ -105,7 +105,7 @@ axis off
 
 %% Step 4: Gaussian Mixture Estimation
 
-nDist = 2; %Number of gaussians
+nDist = 2; % Number of gaussians
 GM = cell(int16(numSuperpixels),1);
 
 %Fit a gaussian for each superpixel
@@ -129,7 +129,7 @@ for n=1:numSuperpixels
     %pause
 end
 
-%% step 5 soft-occlusion map
+%% Step 5: soft-occlusion map
 
 softMap=zeros(ni,nj);
 for n=1:numSuperpixels
@@ -150,7 +150,7 @@ nFig=nFig+1;
 figure(nFig)
 imagesc(softMap); colorbar
 
-%% step 6: Hard oclsuion map (threshold)
+%% Step 6: Hard occlusion map (threshold)
 
 thr =0; %decision threshold
 hardMap = softMap>thr; 
@@ -159,7 +159,7 @@ nFig=nFig+1;
 figure(nFig)
 imagesc(hardMap) %Estimated occlusion
 
-%% step 7: Comparison against ground truth
+%% Step 7: Comparison against ground truth
 
 nFig=nFig+1;
 figure(nFig)
