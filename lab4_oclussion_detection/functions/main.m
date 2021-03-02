@@ -108,16 +108,18 @@ axis off
 nDist = 2; % Number of gaussians
 GM = cell(int16(numSuperpixels),1);
 
-%Fit a gaussian for each superpixel
-for n=1:numSuperpixels
+% Fit a gaussian for each superpixel
+for n = 1:numSuperpixels
 
-    %Select all pixels belonging the same superpixel
-     
-    
-    %data =  ;%pixels of xi_1 belonging to superpixel n
+    % Select all pixels belonging the same superpixel
+    [u,v] = find(lblP == n);
+    data = zeros(size(v,1),3);
+    for p = 1:size(row)
+        data(p,:) = xi_1(u(p),v(p),:); % Pixels of xi_1 belonging to superpixel n
+    end
     
     try
-        %Model the gaussian mixture model of the data
+        % Model the gaussian mixture model of the data
         GM{n} = fitgmdist(data, nDist);
     catch exception
         disp('There was an error fitting the Gaussian mixture model')
@@ -131,8 +133,8 @@ end
 
 %% Step 5: soft-occlusion map
 
-softMap=zeros(ni,nj);
-for n=1:numSuperpixels
+softMap = zeros(ni,nj);
+for n = 1:numSuperpixels
     
    %Select all pixels belonging the same superpixel
  
@@ -141,19 +143,19 @@ for n=1:numSuperpixels
     %Probability of belonging the gmm of the superpixel
     postProb = pdf(GM{n}, data);
     
-    p=-log(postProb);
+    p = -log(postProb);
     
-    softMap(mask)=p;
+    softMap(mask) = p;
 end
 
-nFig=nFig+1;
+nFig = nFig+1;
 figure(nFig)
 imagesc(softMap); colorbar
 
 %% Step 6: Hard occlusion map (threshold)
 
-thr =0; %decision threshold
-hardMap = softMap>thr; 
+thr = 0; % Decision threshold
+hardMap = softMap > thr; 
 
 nFig=nFig+1;
 figure(nFig)
