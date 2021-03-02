@@ -23,7 +23,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Pre-process input and select appropriate filter.
-function B = cross_bilateral_filter(I1, I2,w,sigma)
+function B = cross_bilateral_filter(I1, I2, w, sigma)
 
 % Verify that the input image exists and is valid.
 if ~exist('I1','var') || isempty(I1)
