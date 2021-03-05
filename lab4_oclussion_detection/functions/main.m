@@ -107,6 +107,7 @@ axis off
 
 nDist = 2; % Number of gaussians
 GM = cell(int16(numSuperpixels),1);
+options = statset('MaxIter',200);
 
 % Fit a gaussian for each superpixel
 for n = 1:numSuperpixels
@@ -114,13 +115,14 @@ for n = 1:numSuperpixels
     % Select all pixels belonging the same superpixel
     [u,v] = find(lblP == n);
     data = zeros(size(v,1),3);
-    for p = 1:size(row)
+    for p = 1:size(data,1)
         data(p,:) = xi_1(u(p),v(p),:); % Pixels of xi_1 belonging to superpixel n
     end
     
     try
         % Model the gaussian mixture model of the data
-        GM{n} = fitgmdist(data, nDist);
+        disp('GM for superpixel ' + string(n));
+        GM{n} = fitgmdist(data, nDist, 'Options', options);
     catch exception
         disp('There was an error fitting the Gaussian mixture model')
         error = exception.message;
@@ -128,7 +130,7 @@ for n = 1:numSuperpixels
         GM{n} = fitgmdist(data,nDist,'Regularize',0.1);
     end
     %plot3(data(:,1), data(:,2), data(:,3), '*')
-    %pause
+    %hold on
 end
 
 %% Step 5: soft-occlusion map
@@ -136,16 +138,22 @@ end
 softMap = zeros(ni,nj);
 for n = 1:numSuperpixels
     
-   %Select all pixels belonging the same superpixel
- 
-    %data = ;%pixels of eta_12 belonging to superpixel n
+    % Select all pixels belonging the same superpixel
+    [u,v] = find(lblP == n);
+    data = zeros(size(v,1),3);
+    for p = 1:size(data,1)
+        data(p,:) = eta_12(u(p),v(p),:); % Pixels of eta_12 belonging to superpixel n
+    end
     
-    %Probability of belonging the gmm of the superpixel
+    % Probability of belonging the GMM of the superpixel
     postProb = pdf(GM{n}, data);
     
     p = -log(postProb);
     
+    mask = (lblP == n);
     softMap(mask) = p;
+    
+    %gmPDF = @(x,y) arrayfun(@(x0,y0) pdf(GMModel,[x0 y0]),x,y);
 end
 
 nFig = nFig+1;
@@ -154,8 +162,8 @@ imagesc(softMap); colorbar
 
 %% Step 6: Hard occlusion map (threshold)
 
-thr = 0; % Decision threshold
-hardMap = softMap > thr; 
+thr = -5; % Decision threshold
+hardMap = softMap > thr;
 
 nFig=nFig+1;
 figure(nFig)
