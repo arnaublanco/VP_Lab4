@@ -28,7 +28,7 @@ imshow(I2);
 
 %% Step 1 and 2: Build xi_1 and eta_12
 
-close all;
+%close all;
 % Build warping function
 I1_from_I2 = warping(I1, I2, OFGT(:,:,1), OFGT(:,:,2));
 
@@ -36,8 +36,8 @@ nFig = nFig + 1;
 figure(nFig)
 imshow(I1_from_I2);
 
-sigma_spatial = 1;
-sigma_grayLevel = 0.1;
+sigma_spatial = 5;
+sigma_grayLevel = 0.01;
 
 eps_g =  1e-3;
 sigma = [sigma_spatial, sigma_grayLevel];
@@ -64,7 +64,7 @@ imshow(eta_12);
 
 [ni, nj, nC] = size(xi_1);
 
-weKeep = 0.05; % in percentage
+weKeep = 0.05; % in percentage (valor inicial 0.05)
 nLabels = round(ni*nj*weKeep/100);
 
 %numSuperpixels is the same as number of superpixels.
@@ -107,7 +107,7 @@ axis off
 
 nDist = 2; % Number of gaussians
 GM = cell(int16(numSuperpixels),1);
-options = statset('MaxIter',200);
+options = statset('MaxIter', 1000);
 
 % Fit a gaussian for each superpixel
 for n = 1:numSuperpixels
