@@ -153,7 +153,6 @@ for n = 1:numSuperpixels
     mask = (lblP == n);
     softMap(mask) = p;
     
-    %gmPDF = @(x,y) arrayfun(@(x0,y0) pdf(GMModel,[x0 y0]),x,y);
 end
 
 nFig = nFig+1;
@@ -162,15 +161,15 @@ imagesc(softMap); colorbar
 
 %% Step 6: Hard occlusion map (threshold)
 
-thr = -5; % Decision threshold
+thr = 0; % Decision threshold
 hardMap = softMap > thr;
 
-nFig=nFig+1;
+nFig = nFig+1;
 figure(nFig)
-imagesc(hardMap) %Estimated occlusion
+imagesc(hardMap) % Estimated occlusion
 
 %% Step 7: Comparison against ground truth
 
-nFig=nFig+1;
+nFig = nFig+1;
 figure(nFig)
-imagesc(OccGT) %Ground truth occlusion
+imagesc(OccGT) % Ground truth occlusion

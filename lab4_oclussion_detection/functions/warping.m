@@ -14,8 +14,8 @@ idyy = zeros(M,N);
 
 for i = 1:M
     for j = 1:N
-        ju = j-u(i,j);
-        iv = i-v(i,j);
+        ju = j + u(i,j);
+        iv = i + v(i,j);
         if ju <= 0
             ju = 1;
         elseif ju > N
