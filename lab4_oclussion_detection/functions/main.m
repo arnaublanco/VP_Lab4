@@ -36,13 +36,13 @@ nFig = nFig + 1;
 figure(nFig)
 imshow(I1_from_I2);
 
-sigma_spatial = 5;
-sigma_grayLevel = 0.01;
+sigma_spatial = 2;
+sigma_grayLevel = 0.25;
 
 eps_g =  1e-3;
 sigma = [sigma_spatial, sigma_grayLevel];
 
-winSize = 3; % Window size
+winSize = 5; % Window size
 [ni, nj, nC] = size(I1);
 eta_12 = zeros(ni,nj,nC);
 
@@ -98,14 +98,30 @@ figure(nFig)
 imshow(xi_1_toShow);
 %hold on
 
+eta_12_toShow_r = eta_12(:,:,1);
+eta_12_toShow_g = eta_12(:,:,2);
+eta_12_toShow_b = eta_12(:,:,3);
+
+eta_12_toShow_r(idx) = 1;
+eta_12_toShow_g(idx) = 0;
+eta_12_toShow_b(idx) = 0;
+
+eta_12_toShow(:,:,1) = eta_12_toShow_r;
+eta_12_toShow(:,:,2) = eta_12_toShow_g;
+eta_12_toShow(:,:,3) = eta_12_toShow_b;
+
 nFig = nFig+1;
 figure(nFig)
-imagesc(lblP); colorbar;
-axis off
+imshow(eta_12_toShow);
+
+% nFig = nFig+1;
+% figure(nFig)
+% imagesc(lblP); colorbar;
+% axis off
 
 %% Step 4: Gaussian Mixture Estimation
 
-nDist = 2; % Number of gaussians
+nDist = 6; % Number of gaussians
 GM = cell(int16(numSuperpixels),1);
 options = statset('MaxIter', 1000);
 

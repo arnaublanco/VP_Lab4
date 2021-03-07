@@ -28,7 +28,7 @@ imshow(I2);
 
 %% Step 1 and 2: Build xi_1 and eta_12
 
-close all;
+%close all;
 % Build warping function
 I1_from_I2 = warping(I1, I2, OFGT(:,:,1), OFGT(:,:,2));
 
@@ -36,13 +36,13 @@ nFig = nFig + 1;
 figure(nFig)
 imshow(I1_from_I2);
 
-sigma_spatial = 1;
-sigma_grayLevel = 0.1;
+sigma_spatial = 2;
+sigma_grayLevel = 0.25;
 
 eps_g =  1e-3;
 sigma = [sigma_spatial, sigma_grayLevel];
 
-winSize = 3; % Window size
+winSize = 5; % Window size
 [ni, nj, nC] = size(I1);
 eta_12 = zeros(ni,nj,nC);
 
@@ -98,14 +98,14 @@ figure(nFig)
 imshow(xi_1_toShow);
 %hold on
 
-nFig = nFig+1;
-figure(nFig)
-imagesc(lblP); colorbar;
-axis off
+% nFig = nFig+1;
+% figure(nFig)
+% imagesc(lblP); colorbar;
+% axis off
 
 %% Step 4: Gaussian Mixture Estimation
 
-nDist = ; % Number of gaussians
+nDist = 6; % Number of gaussians
 GM = cell(int16(numSuperpixels),1);
 options = statset('MaxIter', 1000);
 
