@@ -37,12 +37,12 @@ figure(nFig)
 imshow(I1_from_I2);
 
 sigma_spatial = 2;
-sigma_grayLevel = 0.25;
+sigma_grayLevel = 0.1;
 
 eps_g =  1e-3;
 sigma = [sigma_spatial, sigma_grayLevel];
 
-winSize = 5; % Window size
+winSize = 7; % Window size
 [ni, nj, nC] = size(I1);
 eta_12 = zeros(ni,nj,nC);
 
@@ -64,7 +64,7 @@ imshow(eta_12);
 
 [ni, nj, nC] = size(xi_1);
 
-weKeep = 0.05; % in percentage (valor inicial 0.05)
+weKeep = 0.15; % in percentage (valor inicial 0.05)
 nLabels = round(ni*nj*weKeep/100);
 
 %numSuperpixels is the same as number of superpixels.
@@ -121,7 +121,7 @@ imshow(eta_12_toShow);
 
 %% Step 4: Gaussian Mixture Estimation
 
-nDist = 6; % Number of gaussians
+nDist = 2; % Number of gaussians
 GM = cell(int16(numSuperpixels),1);
 options = statset('MaxIter', 1000);
 
@@ -174,6 +174,7 @@ end
 nFig = nFig+1;
 figure(nFig)
 imagesc(softMap); colorbar
+title('Occlusion Softmap');
 
 %% Step 6: Hard occlusion map (threshold)
 
@@ -182,10 +183,17 @@ hardMap = softMap > thr;
 
 nFig = nFig+1;
 figure(nFig)
+subplot(211)
 imagesc(hardMap) % Estimated occlusion
+title('hardMap')
 
 %% Step 7: Comparison against ground truth
+subplot(212)
+imagesc(OccGT)
+title('Ground truth')
 
+diff = OccGT- hardMap; % To evaluate performance.
 nFig = nFig+1;
 figure(nFig)
-imagesc(OccGT) % Ground truth occlusion
+imagesc(diff) % Ground truth occlusion
+title('hardMap - Ground truth')
