@@ -186,28 +186,36 @@ figure(nFig)
 subplot(211)
 imagesc(hardMap) % Estimated occlusion
 title('hardMap')
-
 subplot(212)
 imagesc(OccGT)
 title('Ground truth')
 
 %% Step 7: Comparison against ground truth
 
-diff = OccGT - hardMap; % To evaluate performance.
+colormap hsv
+
+condTP = OccGT == 1 & hardMap == 1;
+condFP = OccGT == 0 & hardMap == 1;
+condTN = OccGT == 0 & hardMap == 0;
+condFN = OccGT == 1 & hardMap == 0;
+
 nFig = nFig+1;
-figure(nFig)
-imagesc(diff); colorbar; % Ground truth occlusion
+figure(nFig);
+colorbar;
+imagesc(condFN);
+imagesc(cond);
+imagesc(condFN);
+imagesc(condFN);
 title('hardMap - Ground truth')
 
-%% Metrics
-TP = sum(OccGT == 1 & hardMap == 1, 'all');
-FP = sum(OccGT == 0 & hardMap == 1, 'all');
-TN = sum(OccGT == 0 & hardMap == 0, 'all');
-FN = sum(OccGT == 1 & hardMap == 0, 'all');
+% Metrics
+TP = sum(condTP, 'all');
+FP = sum(condFP, 'all');
+TN = sum(condTN, 'all');
+FN = sum(condFN, 'all');
 
 recall = TP/(TP+FN);
 precision = TP/(TP+FP);
 f1_score = 2*(precision*recall)/(precision + recall);
 
-disp('**************+**************');
 disp('Recall: ' + string(recall) + " | Precision: " + string(precision) + " | F1-score: " + string(f1_score));
